@@ -1,31 +1,33 @@
-const { app, BrowserWindow, autoUpdater } = require("electron");
-const path = require("path");
+const { app, BrowserWindow, autoUpdater } = require('electron');
+const path = require('path');
 
-if (process.platform != "darwin") require("update-electron-app")({ repo: "New-Club-Penguin/NewCP-App-Build" });
-const discord_client = require("discord-rich-presence")("793878460157788220");
+if (process.platform != 'darwin')
+  require('update-electron-app')({ repo: 'New-Club-Penguin/NewCP-App-Build' });
+//const discord_client = require('discord-rich-presence')('793878460157788220');
 
 const ALLOWED_ORIGINS = [
-  "https://newcp.net",
-  "https://play.newcp.net",
+  'http://cpnewadventures.com',
+  'http://play.cpnewadventures.com',
 ];
 const pluginPaths = {
-  win32: path.join(path.dirname(__dirname), "lib/pepflashplayer.dll"),
-  darwin: path.join(path.dirname(__dirname), "lib/PepperFlashPlayer.plugin"),
-  linux: path.join(path.dirname(__dirname), "lib/libpepflashplayer.so"),
+  win32: path.join(path.dirname(__dirname), 'lib/pepflashplayer.dll'),
+  darwin: path.join(path.dirname(__dirname), 'lib/PepperFlashPlayer.plugin'),
+  linux: path.join(path.dirname(__dirname), 'lib/libpepflashplayer.so'),
 };
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require("electron-squirrel-startup")) { // eslint-disable-line global-require
+if (require('electron-squirrel-startup')) {
+  // eslint-disable-line global-require
   app.quit();
   process.exit(0); // because squirrel
 }
 
-if (process.platform === "linux") app.commandLine.appendSwitch("no-sandbox");
+if (process.platform === 'linux') app.commandLine.appendSwitch('no-sandbox');
 const pluginName = pluginPaths[process.platform];
-console.log("pluginName", pluginName);
+console.log('pluginName', pluginName);
 
-app.commandLine.appendSwitch("ppapi-flash-path", pluginName);
-app.commandLine.appendSwitch("ppapi-flash-version", "31.0.0.122");
-app.commandLine.appendSwitch("ignore-certificate-errors");
+app.commandLine.appendSwitch('ppapi-flash-path', pluginName);
+app.commandLine.appendSwitch('ppapi-flash-version', '31.0.0.122');
+app.commandLine.appendSwitch('ignore-certificate-errors');
 
 let mainWindow;
 const createWindow = () => {
@@ -40,10 +42,10 @@ const createWindow = () => {
 
   splashWindow.setResizable(false);
   splashWindow.loadURL(
-    "file://" + path.join(path.dirname(__dirname), "src/index.html"),
+    'file://' + path.join(path.dirname(__dirname), 'src/index.html')
   );
-  splashWindow.on("closed", () => (splashWindow = null));
-  splashWindow.webContents.on("did-finish-load", () => {
+  splashWindow.on('closed', () => (splashWindow = null));
+  splashWindow.webContents.on('did-finish-load', () => {
     splashWindow.show();
   });
 
@@ -56,21 +58,22 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.webContents.on("did-finish-load", () => {
+  mainWindow.webContents.on('did-finish-load', () => {
     if (splashWindow) {
       splashWindow.close();
       mainWindow.show();
     }
   });
-  discord_client.updatePresence({
-    state: "Waddling",
-    details: "New Club Penguin",
-    startTimestamp: Date.now(),
-    largeImageKey: "ncpapp",
-    instance: true,
-  });
 
-  mainWindow.webContents.on("will-navigate", (event, urlString) => {
+  // discord_client.updatePresence({
+  //   state: 'Waddling',
+  //   details: 'Club Penguin New Adventures',
+  //   startTimestamp: Date.now(),
+  //   largeImageKey: 'app',
+  //   instance: true,
+  // });
+
+  mainWindow.webContents.on('will-navigate', (event, urlString) => {
     if (!ALLOWED_ORIGINS.includes(new URL(urlString).origin)) {
       event.preventDefault();
     }
@@ -80,14 +83,14 @@ const createWindow = () => {
 
   new Promise((resolve) =>
     setTimeout(() => {
-      mainWindow.loadURL("https://newcp.net/");
+      mainWindow.loadURL('http://play.cpnewadventures.com/');
       resolve();
     }, 5000)
   );
 };
 
 if (app.requestSingleInstanceLock()) {
-  app.on("second-instance", (_event, _commandLine, _workingDirectory) => {
+  app.on('second-instance', (_event, _commandLine, _workingDirectory) => {
     // Someone tried to run a second instance, we should focus our window.
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -95,22 +98,22 @@ if (app.requestSingleInstanceLock()) {
     }
   });
 
-  app.on("ready", createWindow);
+  app.on('ready', createWindow);
 
-  app.setAsDefaultProtocolClient("newcp");
+  app.setAsDefaultProtocolClient('newcp');
 
   // Quit when all windows are closed, except on macOS. There, it's common
   // for applications and their menu bar to stay active until the user quits
   // explicitly with Cmd + Q.
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
+  app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
       app.quit();
       discord_client.disconnect();
       process.exit(0); // because squirrel
     }
   });
 
-  app.on("activate", () => {
+  app.on('activate', () => {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) {
