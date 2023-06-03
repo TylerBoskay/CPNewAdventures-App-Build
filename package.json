@@ -1,8 +1,8 @@
 {
-  "name": "NewCP",
-  "productName": "NewCP",
+  "name": "CPNewAdventures",
+  "productName": "CPNewAdventures",
   "version": "1.5.3",
-  "description": "NewCP App",
+  "description": "CPNewAdventures App",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -69,8 +69,8 @@
           "name": "@electron-forge/publisher-github",
           "config": {
             "repository": {
-              "owner": "New-Club-Penguin",
-              "name": "NewCP-App-Build"
+              "owner": "TylerBoskay",
+              "name": "CPNewAdventures-App-Build"
             },
             "prerelease": true
           }
@@ -88,8 +88,8 @@
         ]
       }
     ],
-    "appId": "com.newcp.ncp-app",
-    "productName": "NewCP",
+    "appId": "com.cpna.cpna-app",
+    "productName": "CPNewAdventures",
     "copyright": "Copyright © 2020 ${author}",
     "mac": {
       "icon": "./lib/icons/icon.icns",
@@ -103,9 +103,9 @@
     },
     "protocols": [
       {
-        "name": "newcp",
+        "name": "CPNewAdventures",
         "schemes": [
-          "newcp"
+          "CPNewAdventures"
         ]
       }
     ]
